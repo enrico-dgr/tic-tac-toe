@@ -1,0 +1,8 @@
+{
+  "name": "tic-tac-toe",
+  "version": "0.0.1",
+  "main": "index.js",
+  "repository": "https://github.com/enrico-dgr/tic-tac-toe.git",
+  "author": "enrico-dgr <enrico.digrazia98@gmail.com>",
+  "license": "MIT"
+}
