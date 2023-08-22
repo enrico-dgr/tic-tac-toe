@@ -60,13 +60,15 @@ TicTacToeGame
 │   │   └── ...
 │   ├── screens
 │   │   └── ...
+|   └── package.json
 │   
 ├── server 
 |     ├── minimax.ts (Minimax algorithm implementation)
 |     ├── server.ts (Express server file)
+|     ├── package.json
+|     └── tsconfig.json
 |
-├── package.json
-└── tsconfig.json
+└── package.json
 
 ```
 
@@ -82,69 +84,152 @@ TicTacToeGame
      yarn add redux react-redux @types/react-redux
      ```
 
-3. Express Server and MySQL Database Integration using Socket.io using TypeScript:
+3. To install MySQL, follow these steps:
 
-    ```typescript
-    import express from 'express';
-    import mysql from 'mysql';
-    import { createServer } from 'http';
-    import { Server, Socket } from 'socket.io';
+   1. Visit the official MySQL website: [https://dev.mysql.com/downloads/installer/](https://dev.mysql.com/downloads/installer/)
+   2. Once downloaded, run the installer and follow the installation wizard's instructions.
+   3. During the installation process, you will be prompted to select a setup type. Choose "Developer Default," which includes all necessary components for development purposes.
+   4. Proceed with the installation by clicking "Next."
+   5. On subsequent screens, you can customize certain options if desired or simply keep their default values.
+   6. Finally, click on "Execute" to begin installing MySQL with your chosen configuration.
 
-    const app = express();
-    const httpServer = createServer(app);
-    const io = new Server(httpServer);
+   After completing these steps, MySQL should be successfully installed on your system.
+   Port: 3306
 
-    // Configure MySQL connection details
-    const connection = mysql.createConnection({
-      host: 'localhost',
-      user: 'your_username',
-      password: 'your_password',
-      database: 'your_database_name'
-    });
+4. Express Server and MySQL Database Integration using Socket.io using TypeScript:
+     1. We need to configure Yarn for our project.
+        Run this command inside your project directory:
 
-    // Connect to MySQL database
-    connection.connect((err) => {
-      if (err) throw err;
-      
-      console.log('Connected to MySQL database!');
-    });
-    ```
+        ```shell
+        yarn init -y
+        ```
 
-    1. Minimax Algorithm Implementation in TypeScript within the server folder:
+     2. Great job so far! Now it's time to install the required dependencies using Yarn.
+
+        To install TypeScript:
+
+        ```shell
+        yarn add -D typescript @types/node ts-node nodemon
+        ```
+
+        To install Express:
+
+        ```shell
+        yarn add express
+        yarn add -D @types/express
+        ```
+
+        To install MySQL driver for Node.js:
+
+        ```shell
+        yarn add mysql
+        yarn add -D @types/mysql
+        ```
+
+        To install Socket.io:
+
+        ```shell
+        yarn add socket.io
+        ```
+
+     3. Create an entry point file like `index.ts` inside a `src` folder.
 
         ```typescript
-        // Define your minimax algorithm implementation here
+        import express from 'express';
+        import mysql from 'mysql';
+        import { createServer } from 'http';
+        import { Server, Socket } from 'socket.io';
 
-        function minimax(board: any[], depth: number, isMaximizingPlayer: boolean): number {
-          // Implement the logic for minimizing or maximizing player moves based on board state
+        const app = express();
+        const httpServer = createServer(app);
+        const io = new Server(httpServer);
+
+        // Configure MySQL connection details
+        const connection = mysql.createConnection({
+          host: 'localhost',
+          user: 'your_username',
+          password: 'your_password',
+          database: 'your_database_name'
+        });
+
+        // Connect to MySQL database
+        connection.connect((err) => {
+          if (err) throw err;
           
+          console.log('Connected to MySQL database!');
+        });
+
+        io.on('connection', (socket: Socket) => {
+          console.log('A user connected');
+
+          // Handle custom events from client-side
+          socket.on('customEvent', (data) => {
+            console.log(data); // Do something with received data
+            // You can also emit events back to this specific client using: socket.emit(...)
+            // Or broadcast messages to all connected clients using: io.emit(...)
+          });
+
+          socket.on('disconnect', () => {
+            console.log('A user disconnected');
+          });
+        });
+
+        app.get('/', (req, res) => {
+          // Handle API requests here
+        });
+
+        httpServer.listen(3000, () => {
+          console.log('Server running on port 3000');
+        });
+        ```
+
+        and add the file nodemon.json
+        ```json
+        {
+          "restartable": "rs",
+          "ignore": ["node_modules/**/node_modules"],
+          "watch": ["src"],
+          "execMap": {
+            "js": "node --experimental-modules"
+          },
+          "ext": ".js,.ts"
+        }
+        ```
+
+     4. Finally, update the scripts section of your `package.json` file with these commands:
+
+        ```json
+
+        "scripts": {
+            "start": "nodemon --exec ts-node ./src/index.ts",
+            "build": "tsc"
         }
 
-        export default minimax;
         ```
 
-    2. Socket.io Integration (TypeScript) within the server folder:
+     5. That's it! You're all set.
 
-        ```bash
-        # Install socket.io-client package along with its type definitions using npm
-        npm install --save socket.io-client @types/socket.io-client
-        ```
+     To start your server in development mode:
 
-    3. Continue with the rest of the Express Server and MySQL Database Integration steps:
+     ```shell
+     yarn start
+     ```
 
-         ```typescript
+     To build your TypeScript code into JavaScript:
 
-         io.on('connection', (socket: Socket) => {
-            // Handle socket events here
-            
-         });
+     ```shell
+     yarn build
+     ```
 
-         app.get('/', (req, res) => {
-            // Handle API requests here
-           
-         });
+5. Minimax Algorithm Implementation in TypeScript within the server folder:
 
-         httpServer.listen(3000, () => {
-            console.log('Server running on port 3000');
-         });
-         ```
+    ```typescript
+    // Define your minimax algorithm implementation here
+
+    function minimax(board: any[], depth: number, isMaximizingPlayer: boolean): number {
+      // Implement the logic for minimizing or maximizing player moves based on board state
+      
+    }
+
+    export default minimax;
+    ```
