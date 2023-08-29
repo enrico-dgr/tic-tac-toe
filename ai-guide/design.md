@@ -4,6 +4,9 @@
 - [Prototypes](#prototypes)
 - [Tech Stack](#tech-stack)
 - [Samples](#samples)
+- [Style](#style)
+  - [Light Mode](#light-mode)
+  - [Dark Mode](#dark-mode)
 
 ## Prototypes
 
@@ -184,6 +187,7 @@ TicTacToeGame
         ```
 
         and add the file nodemon.json
+
         ```json
         {
           "restartable": "rs",
@@ -233,3 +237,39 @@ TicTacToeGame
 
     export default minimax;
     ```
+
+## Style
+
+### Light Mode
+
+1. **Primary Color**: #00AEEF
+   - This bright blue shade will serve as the primary color for your game-page. It represents a sense of excitement and engagement.
+
+2. **Secondary Color**: #FFB800
+   - Use this warm orange tone as the secondary color in your design. It adds energy and playfulness to the overall aesthetic.
+
+3. **Accent Color 1**: #FF3D71
+   - For some extra flair, incorporate this bold pinkish-red hue as an accent color throughout your game-page. It brings a touch of intensity and liveliness.
+
+4. **Accent Color 2**: #9C27B0
+   - Consider using this deep purple shade sparingly to create visual interest or highlight certain elements within your tic tac toe game-page.
+
+5. **Background Color**: #F6F8FA
+   - Opt for a light grayish-blue background that provides contrast with the other vibrant colors while maintaining a clean and modern feel.
+
+### Dark Mode
+
+1. **Primary Color**: #00AEEF
+   - This vibrant blue hue will serve as the primary color in your dark-themed design.
+
+2. **Secondary Color**: #FFB800
+   - Use this warm orange tone as the secondary color to add contrast and visual interest in your dark palette.
+
+3. **Accent Color 1**: #FF3D71
+   - Incorporate this bold pinkish-red accent color sparingly to create focal points or highlight specific elements on your game-page.
+
+4. **Accent Color 2**: #9C27B0
+   - Consider using this deep purple shade selectively to bring depth and richness to certain parts of your design.
+
+5. **Background Color**: #212121
+   - Opt for a solid black background that provides a sleek and stylish base for your dark-themed tic tac toe game-page.
