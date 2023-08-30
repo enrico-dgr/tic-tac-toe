@@ -1,11 +1,15 @@
-import cors from 'cors';
 import express from 'express';
 import { createServer } from 'http';
 import { Server, Socket } from 'socket.io';
+import bodyParser from 'body-parser';
 import usersRouter from './routes/users';
 import gamesRouter from './routes/games';
 
-const app = express();
+
+export const app = express();
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: true}));
+
 const httpServer = createServer(app);
 
 // Socket

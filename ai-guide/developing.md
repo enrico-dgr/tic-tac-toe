@@ -238,3 +238,41 @@ export default function App() {
   );
 }
 ```
+
+## General BE
+
+After selecting the following code under `users.ts`
+
+```ts
+// users.ts
+```
+
+Question with Cody inline chat: How can I improve this?
+
+Answer:
+
+Here are a few ways this code could be improved:
+
+1. Add validation and sanitization for user input to prevent security issues like SQL injection. For example, validate and escape any user-provided values before using them in a SQL query.
+
+2. Use async/await instead of callbacks for query methods. This makes the code easier to read and handle errors. For example:
+
+    ```ts
+    const [rows] = await db.query('SELECT * FROM users WHERE id = ?', [req.params.id]);
+    ```
+
+3. Move the database logic out of the route handlers into a separate module/file. This separates concerns and keeps route handlers focused on request/response handling.
+
+4. Use a connection pool instead of a single connection. This is more efficient for frequent queries.
+
+5. Add logging for errors and other useful debug information.
+
+6. Add input validation for required fields when creating a new user.
+
+7. Add middleware to handle common tasks like authentication for protected routes.
+
+8. Use an ORM like TypeORM to abstract data layer. Reduces boilerplate database code.
+
+9. Add API documentation for endpoints using Swagger/OpenAPI.
+
+Let me know if you need any clarification or have additional questions! I'm happy to provide more details on these suggestions.

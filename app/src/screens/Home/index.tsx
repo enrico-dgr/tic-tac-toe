@@ -6,8 +6,6 @@ import { useNavigate } from 'react-router-native';
 import Link from '../../components/Link';
 
 const Home = () => {
-  const navigate = useNavigate();
-
   return (
     <View style={style.container}>
       <Header>

@@ -13,10 +13,15 @@ usersRouter.use(
 
 usersRouter.get('/', (req, res) => {
   // Get all users
+  res.json([]);
 });
 
 usersRouter.post('/', (req, res) => {
+  const newUser = req.body
+
   // Create a new user
+  res.statusCode = 201;
+  res.status(201).json(newUser);
 });
 
 usersRouter.get('/guest', async (req: Request<{}, {}, {}, { name?: string }>, res) => {
