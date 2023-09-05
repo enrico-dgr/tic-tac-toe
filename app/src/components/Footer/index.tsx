@@ -1,13 +1,20 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import style from './style';
-import { View } from 'react-native';
+import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 
 interface FooterProps {
   children: React.ReactNode;
+  style?: StyleProp<ViewStyle>;
 }
 
-const Footer = ({ children }: FooterProps) => {
-  return <View style={style.container}>{children}</View>;
+const Footer = ({ children, style: styleOverride }: FooterProps) => {
+  const containerStyle = useMemo(
+    () => StyleSheet.compose(style.container, styleOverride ?? {}),
+    [styleOverride]
+  );
+
+
+  return <View style={containerStyle}>{children}</View>;
 };
 
 export default Footer;

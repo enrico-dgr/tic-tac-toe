@@ -3,6 +3,9 @@ import { useState } from 'react';
 import ConfigurationGameLocal from './ConfigurationGame/Local';
 import ConfigurationGameOnline from './ConfigurationGame/Online';
 import GamesList from './GameList';
+import style from './style';
+import useThemedStyle from '../../hooks/useThemedStyle';
+import Button from '../Button';
 
 /**
  * React Native component that displays an interface
@@ -16,6 +19,7 @@ import GamesList from './GameList';
  * - create a new one -> configuration window -> redirect to lobby page
  */
 const GameSelection = () => {
+  const themedStyle = useThemedStyle(style);
   const [state, setState] = useState({
     configs: {
       local: false,
@@ -33,14 +37,10 @@ const GameSelection = () => {
   const gamesList = (open: boolean) => () => setState({ ...state, gamesList: open });
 
   return (
-    <View>
-      <Pressable onPress={localConfigs(true)}>
-        <Text>Local</Text>
-      </Pressable>
+    <View style={themedStyle.container}>
+      <Button onPress={localConfigs(true)} text='Local' />
+      <Button onPress={gamesList(true)} text='Online >' />
 
-      <Pressable onPress={gamesList(true)}>
-        <Text>Online {'>'}</Text>
-      </Pressable>
       {/* <Link text="Multiplayer" to="/game/multiplayer/lobby" /> */}
 
       {state.configs.local && <ConfigurationGameLocal />}
@@ -48,8 +48,11 @@ const GameSelection = () => {
       {state.gamesList && (
         <GamesList openConfigs={onlineConfigs(true)} close={gamesList(false)} />
       )}
+      {/* <GamesList openConfigs={onlineConfigs(true)} close={gamesList(false)} /> */}
     </View>
   );
 };
 
 export default GameSelection;
+
+
