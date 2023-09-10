@@ -1,8 +1,6 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { View } from 'react-native';
 import style from './style';
-import Header from '../../components/Header';
-import Link from '../../components/Link';
 import GameSelection from '../../components/GameSelection';
 
 const Home = () => {

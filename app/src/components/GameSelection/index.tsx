@@ -2,7 +2,7 @@ import { Pressable, Text, View } from 'react-native';
 import { useState } from 'react';
 import ConfigurationGameLocal from './ConfigurationGame/Local';
 import ConfigurationGameOnline from './ConfigurationGame/Online';
-import GamesList from './GameList';
+import OnlineGamesList from './OnlineGamesList';
 import style from './style';
 import useThemedStyle from '../../hooks/useThemedStyle';
 import Button from '../Button';
@@ -43,12 +43,12 @@ const GameSelection = () => {
 
       {/* <Link text="Multiplayer" to="/game/multiplayer/lobby" /> */}
 
-      {state.configs.local && <ConfigurationGameLocal />}
+      {/* {state.configs.local && <ConfigurationGameLocal />} */}
+      <ConfigurationGameLocal />
       {state.configs.online && <ConfigurationGameOnline />}
       {state.gamesList && (
-        <GamesList openConfigs={onlineConfigs(true)} close={gamesList(false)} />
+        <OnlineGamesList openConfigs={onlineConfigs(true)} close={gamesList(false)} />
       )}
-      {/* <GamesList openConfigs={onlineConfigs(true)} close={gamesList(false)} /> */}
     </View>
   );
 };

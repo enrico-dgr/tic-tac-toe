@@ -1,11 +1,12 @@
 export type Theme = 'light' | 'dark';
 
-type ThemeColors = {
+export type ThemeColors = {
   primaryColor: string;
   secondaryColor: string;
   primaryAccentColor: string;
   secondaryAccentColor: string;
   backgroundColor: string;
+  secondaryBackgroundColor: string;
 };
 
 const light: ThemeColors = {
@@ -32,7 +33,12 @@ const light: ThemeColors = {
   /**
    * Opt for a light grayish-blue background that provides contrast with the other vibrant colors while maintaining a clean and modern feel.
    */
-  backgroundColor: '#F6F8FA'
+  backgroundColor: '#F6F8FA',
+  
+  /**
+   * A slightly darker version than `backgroundColor`, needed for modals and similar double-backgrounds situations.
+   */
+  secondaryBackgroundColor: '#E6E8EA'
 };
 
 const dark: ThemeColors = {
@@ -59,7 +65,12 @@ const dark: ThemeColors = {
   /**
    * Opt for a solid black background that provides a sleek and stylish base for your dark-themed tic tac toe game-page.
    */
-  backgroundColor: '#212121'
+  backgroundColor: '#212121',
+  
+  /**
+   * A slightly lighter version than `backgroundColor`, needed for modals and similar double-backgrounds situations.
+   */
+  secondaryBackgroundColor: '#303030'
 };
 
 export const getThemePalette = (theme: Theme): ThemeColors => {
