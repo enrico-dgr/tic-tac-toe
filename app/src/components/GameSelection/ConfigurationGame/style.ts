@@ -24,7 +24,8 @@ export default create(({ palette }) => ({
     },
     shadowOpacity: 0.25,
     shadowRadius: 4,
-    elevation: 5
+    elevation: 5,
+    zIndex: 5
   },
   configTitle: {
     color: palette.primaryAccentColor,

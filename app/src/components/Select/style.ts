@@ -1,18 +1,25 @@
 import create from '../../style/create';
 
-export default create(({ palette }) => ({
+export default create(({ palette, sizes }) => ({
   container: {
-    marginVertical: 8
+    // borderWidth: 1,
+    // borderColor: palette.secondaryAccentColor,
+    
+    zIndex: 1
   },
   label: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    marginBottom: 8
+    color: palette.primaryColor,
+    fontSize: sizes.inputs
   },
   picker: {
     backgroundColor: palette.backgroundColor,
-    height: 50,
+    maxHeight: '400%',
     width: '100%',
-    position: 'absolute'
-  }
+    position: 'absolute',
+    left: 0,
+    top: '100%',
+    overflow: 'scroll',
+    scrollbarWidth: 'none'
+  },
+  pickerItem: {}
 }));

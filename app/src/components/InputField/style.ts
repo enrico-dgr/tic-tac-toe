@@ -1,8 +1,6 @@
 import create from '../../style/create';
 
-export default create(({
-  palette
-}) => ({
+export default create(({ palette }) => ({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -14,13 +12,15 @@ export default create(({
     marginRight: 10,
     flex: 1
   },
-  input: {
+  inputContainer: {
+    flex: 1,
+    borderBottomWidth: 1,
+    borderColor: palette.primaryAccentColor,
+    padding: 10
+  },
+  inputText: {
     color: palette.primaryColor,
     textAlign: 'center',
-    flex: 1,
-    borderWidth: 1,
-    borderColor: '#ccc',
-    padding: 10,
     fontSize: 16
   }
 }));

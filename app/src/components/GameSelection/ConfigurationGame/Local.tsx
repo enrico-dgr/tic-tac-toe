@@ -1,10 +1,8 @@
 import { Text, View } from 'react-native';
 import { useState } from 'react';
-import useThemedStyle from '../../../hooks/useThemedStyle';
 import style from './style';
 import InputField from '../../InputField';
 import useStyle from '../../../hooks/useStyle';
-import Select from '../../Select';
 
 const ConfigurationGameLocal = () => {
   // configuration game component.
@@ -23,17 +21,20 @@ const ConfigurationGameLocal = () => {
         <Text style={style_.configTitle}>Configure Game</Text>
         <InputField
           label="Board's size"
-          inputMode="numeric"
-          onChangeText={(text) =>
+          type="select"
+          items={['3', '4', '5']}
+          onValueChange={(text) =>
             setState({
               ...state,
               size: parseInt(text)
             })
           }
           value={String(state.size)}
+          containerStyle={{ zIndex: 1 }}
         />
-        <Select
+        <InputField
           label="Difficulty"
+          type="select"
           value={state.difficulty}
           items={['easy', 'normal', 'hard']}
           onValueChange={(text) =>

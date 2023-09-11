@@ -9,11 +9,11 @@ type NamedStyles<T> = { [P in keyof T]: ViewStyle | TextStyle | ImageStyle };
  * @deprecated use `useStyle` instead
  */
 const useThemedStyle = <T extends NamedStyles<T> | NamedStyles<any>>(
-  getStyles: (theme: Theme) => T
+  getStyles: ({ theme }: { theme: Theme }) => T
 ) => {
   const theme = useTheme();
 
-  return useMemo(() => getStyles(theme), [theme]);
+  return useMemo(() => getStyles({ theme }), [theme]);
 };
 
 export default useThemedStyle;
