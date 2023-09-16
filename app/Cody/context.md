@@ -85,7 +85,35 @@ Tested commands:
 
   - Maintain an iterative log of my responses and feedback. This allows you to refine my answers over time.
 
+JSON-INPUTS-START
+
+[{
+
+  "path": "../asd.js",
+
+  "content": "
+
+  ```js
+  const someCode = () => {};
+  const str = 'string';
+  const obj = {
+    prop: `my ${str}`
+  };
+  ```
+
+  "
+
+}]
+
+JSON-INPUTS-END
+
   Please let me know if any of these suggestions would help improve my understanding of the project context and ability to provide useful answers! I'm happy to collaborate on enhancing this file.
+
+### Slot 4: [Write a template]
+
+- Description: Write script template for a hook, so I can copy-paste before writing a new hook or for you before creating a new hook based on my instructions.
+- Expected Answer: A list of references to most important libraries inside the project (or their corresponding docs) and hand-made custom docs (if any) inside the project. The formatting should match the default references.
+- Answer:
 
 ## References
 
