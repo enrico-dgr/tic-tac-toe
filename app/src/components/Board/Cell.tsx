@@ -1,10 +1,10 @@
-import useThemedStyle from '../../hooks/useThemedStyle';
+import useStyle from '../../hooks/useStyle';
 import socket from '../../services/socket';
-import style from './style';
 import { TouchableOpacity, View } from 'react-native';
+import style from './style';
 
 const Cell = (i: number) => {
-  const styleByTheme = useThemedStyle(style);
+  const style_ = useStyle(style);
 
   return (
     <TouchableOpacity
@@ -13,7 +13,7 @@ const Cell = (i: number) => {
         socket.emit('make move', { cellId: i });
       }}
     >
-      <View style={styleByTheme.cell} />
+      <View style={style_.cell} />
     </TouchableOpacity>
   );
 };

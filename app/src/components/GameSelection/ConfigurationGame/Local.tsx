@@ -1,8 +1,11 @@
 import { Text, View } from 'react-native';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import style from './style';
 import InputField from '../../InputField';
 import useStyle from '../../../hooks/useStyle';
+import Button from '../../Button';
+import GamesServices from '../../../services/fetch/games';
+import Modal from './Modal';
 
 const ConfigurationGameLocal = () => {
   // configuration game component.
@@ -10,25 +13,43 @@ const ConfigurationGameLocal = () => {
 
   const style_ = useStyle(style);
   const [state, setState] = useState({
+    name: 'default',
     size: 3,
     difficulty: 'normal'
   });
 
+  const onSizeChange = useCallback((text: string) => {
+    setState((s) => ({
+      ...s,
+      size: parseInt(text)
+    }));
+  }, []);
+
+  const onDifficultyChange = useCallback((text: string) => {
+    setState((s) => ({
+      ...s,
+      difficulty: text
+    }));
+  }, []);
+
+  const createGame = useCallback(
+    () =>
+      GamesServices.create({
+        body: JSON.stringify(state)
+      }),
+    [state]
+  );
+
   // Add logic to render UI for configuring game
   return (
-    <View style={style_.container}>
-      <View style={style_.modal}>
+    <Modal>
+      <View style={style_.configs}>
         <Text style={style_.configTitle}>Configure Game</Text>
         <InputField
           label="Board's size"
           type="select"
           items={['3', '4', '5']}
-          onValueChange={(text) =>
-            setState({
-              ...state,
-              size: parseInt(text)
-            })
-          }
+          onValueChange={onSizeChange}
           value={String(state.size)}
           containerStyle={{ zIndex: 1 }}
         />
@@ -37,15 +58,13 @@ const ConfigurationGameLocal = () => {
           type="select"
           value={state.difficulty}
           items={['easy', 'normal', 'hard']}
-          onValueChange={(text) =>
-            setState({
-              ...state,
-              difficulty: text
-            })
-          }
+          onValueChange={onDifficultyChange}
         />
       </View>
-    </View>
+      <View style={{ width: '100%', alignItems: 'flex-end' }}>
+        <Button text="Create" onPress={createGame} />
+      </View>
+    </Modal>
   );
 };
 

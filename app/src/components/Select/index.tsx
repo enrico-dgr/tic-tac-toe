@@ -56,9 +56,11 @@ const Select = ({
   }, [value_]);
 
   return (
-    <View style={containerStyle_}>
-      <Pressable onPress={() => setPick(true)}>
-        <Text style={labelStyle_}>{value_}</Text>
+    <View style={containerStyle_} onPointerLeave={() => setPick(false)}>
+      <Pressable onPress={() => setPick(!pick)}>
+        <Text selectable={false} style={labelStyle_}>
+          {value_}
+        </Text>
       </Pressable>
       {pick && (
         <ScrollView style={style_.picker}>
@@ -71,7 +73,9 @@ const Select = ({
               }}
               style={containerStyle_}
             >
-              <Text style={pickerItemStyle}>{item}</Text>
+              <Text selectable={false} style={pickerItemStyle}>
+                {item}
+              </Text>
             </Pressable>
           ))}
         </ScrollView>

@@ -1,10 +1,8 @@
 import { StyleSheet } from 'react-native';
-import { Theme, getThemePalette } from '../../../style/colors';
+import create from '../../../style/create';
 
-export default (theme: Theme) => {
-  const palette = getThemePalette(theme);
-
-  return StyleSheet.create({
+export default create(({ palette }) =>
+  StyleSheet.create({
     container: {
       backgroundColor: palette.backgroundColor,
       position: 'absolute',
@@ -40,5 +38,5 @@ export default (theme: Theme) => {
       color: palette.primaryColor,
       fontSize: 18
     }
-  });
-};
+  })
+);

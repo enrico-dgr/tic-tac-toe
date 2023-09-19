@@ -1,9 +1,7 @@
 import { StyleSheet } from 'react-native';
-import { Theme, getThemePalette } from '../../style/colors';
+import create from '../../style/create';
 
-export default (theme: Theme) => {
-  const palette = getThemePalette(theme);
-
+export default create(({ sizes }) => {
   return StyleSheet.create({
     container: {
       gap: 15,
@@ -11,6 +9,6 @@ export default (theme: Theme) => {
       justifyContent: 'center',
       height: '100%',
       width: '100%'
-    },
+    }
   });
-};
+});

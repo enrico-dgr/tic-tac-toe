@@ -1,13 +1,13 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 
-interface UserState {
+interface GameState {
   name: string;
 }
 
-const initialState: UserState = { name: '' };
+const initialState: GameState = { name: '' };
 
 const userSlice = createSlice({
-  name: 'user',
+  name: 'game',
   initialState,
   reducers: {
     set: (state, action: PayloadAction<string>) => {

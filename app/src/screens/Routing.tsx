@@ -1,15 +1,16 @@
-import { StyleSheet, View } from 'react-native';
+import { View } from 'react-native';
+import create from '../style/create';
 import Game from './Game';
 import Home from './Home';
 import { Theme, getThemePalette } from '../style/colors';
-import useThemedStyle from '../hooks/useThemedStyle';
+import useStyle from '../hooks/useStyle';
 import { NativeRouter, Routes, Route, Navigate } from 'react-router-native';
 
 export default function Routing() {
-  const styleByTheme = useThemedStyle(styles);
+  const style_ = useStyle(style);
 
   return (
-    <View style={styleByTheme.container}>
+    <View style={style_.container}>
       <NativeRouter>
         <Routes>
           <Route path="/" element={<Navigate to={'/home'} />} />
@@ -21,15 +22,11 @@ export default function Routing() {
   );
 }
 
-const styles = (theme: Theme) => {
-  const palette = getThemePalette(theme);
-
-  return StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: palette.backgroundColor,
-      alignItems: 'center',
-      justifyContent: 'center'
-    }
-  });
-};
+const style = create(({ palette }) => ({
+  container: {
+    flex: 1,
+    backgroundColor: palette.backgroundColor,
+    alignItems: 'center',
+    justifyContent: 'center'
+  }
+}));

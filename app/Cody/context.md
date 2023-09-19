@@ -56,26 +56,17 @@ Tested commands:
 - Ask Cody: Refactor Code
   - Command: After reading the whole file to have a better context, answer the question.
 
-### Slot 1: [Title]
+### Slot: [Title]
 
 - Description: Describe the purpose of this answer slot.
 - Expected Answer: Specify the type of answer or the format you expect Cody to provide in this slot.
-
-### Slot 2: [Improve ## References]
-
-- Description: I need relevant references instead of the default values available now.
-- Expected Answer: A list of references to most important libraries inside the project (or their corresponding docs) and hand-made custom docs (if any) inside the project. The formatting should match the default references.
 - Answer:
 
-### Slot 3: [Improve Cody Context File]
+### Slot: [Improve Cody Context File]
 
 - Description: Is this file useful to Cody? How could I improve it?.
 - Expected Answer: Some key point to improve context for Cody in order to understand everything I ask even if code files are not linked by code but textually related.
 - Answer: After reading the whole file to have a better context, here are some ways I could improve the Cody context file:
-
-  - Provide an overview of the project structure and key components. Explaining how different parts fit together gives me more context when answering questions.
-
-  - List out common tasks or operations performed in the project. Understanding typical workflows enables me to provide better code assistance.
 
   - Add annotations in code snippets to explain parts that are particularly relevant. More commentary helps me grasp context better.
 
@@ -85,44 +76,108 @@ Tested commands:
 
   - Maintain an iterative log of my responses and feedback. This allows you to refine my answers over time.
 
-JSON-INPUTS-START
+### Slot: [Code refining]
 
-[{
+- Description: Refine code files at path `../src/*` where needed ( # Coding Approaches will be useful ) and return the refactoring in format of JSON-INPUTS-START/END
+- Expected Answer: Improved code files with more comments.
+- Answer:
 
-  "path": "../asd.js",
+### Slot: [Code refining]
 
-  "content": "
+- Description: Refine code file at path `../src/components/GameSelection/ConfigurationGame/Local.tsx` where needed ( # Coding Approaches will be useful ) by following these steps:
 
-  ```js
-  const someCode = () => {};
-  const str = 'string';
-  const obj = {
-    prop: `my ${str}`
-  };
-  ```
+  1. Carefully review each file, analyzing the overall structure and flow. Look for areas that could benefit from:
+     - Additional comments explaining intent and approach
+     - Improved naming for variables, functions, classes, etc to increase clarity
+     - Simplifying complex logic by breaking it into smaller reusable functions
+     - Removing unused code or dependencies
 
-  "
+  2. For each area identified in step 1, plan the changes needed while preserving original behavior:
+     - Outline new comments to add explaining logic
+     - Determine better names and update references
+     - Extract chunks of logic into well-named functions
+     - Safely delete unneeded code
 
-}]
+  3. Produce updated files applying the planned changes from step 2. Preserve original formatting, only modifying whitespace when needed for changed logic.
 
-JSON-INPUTS-END
+  4. Return the updated files formatted as follows:
 
-  Please let me know if any of these suggestions would help improve my understanding of the project context and ability to provide useful answers! I'm happy to collaborate on enhancing this file.
+      JSON-INPUTS-START
 
-### Slot 4: [Write a template]
+      [
+        {
+          "path": "../src/file1.js",
+          "content": "updated content for file1"
+        },
+        {  
+          "path": "../src/file2.js",
+          "content": "updated content for file2"
+        }
+      ]
 
-- Description: Write script template for a hook, so I can copy-paste before writing a new hook or for you before creating a new hook based on my instructions.
-- Expected Answer: A list of references to most important libraries inside the project (or their corresponding docs) and hand-made custom docs (if any) inside the project. The formatting should match the default references.
+      JSON-INPUTS-END
+- Expected Answer: Improved code files with more comments. Answer can be auto-written through script './writeFiles.ts'
 - Answer:
 
 ## References
+
+- [Project Repo](https://github.com/enrico-dgr/tic-tac-toe) - Project repository
 
 - [React documentation](https://reactjs.org/docs/getting-started.html) - Core React library docs
 - [Redux documentation](https://redux.js.org/introduction/getting-started) - State management with Redux
 - [React Router documentation](https://reactrouter.com/docs/en/v6/getting-started/overview) - Routing and navigation
 - [Jest documentation](https://jestjs.io/docs/getting-started) - Unit testing framework
+- [SudoLang](https://github.com/paralleldrive/sudolang-llm-support/tree/main) - Programming language to collaborate with AI
 
 ## Project-Specific Information
+
+### App component  
+
+- Description: The main entry point that initializes the Redux store, applies theme styling, and renders the GameScreen.
+
+- Purpose: Sets up the core app infrastructure before rendering the main game interface.
+
+- Relevant files: App.tsx, store.ts, style/  
+
+### Game Screen component
+
+- Description: Displays the tic-tac-toe board and handles game logic and turns. Connects to Redux to get state.
+
+- Purpose: Provides the core game interface and gameplay functionality.
+
+- Relevant files: screens/Game/*.tsx?, Board/*.tsx?
+
+### Redux store
+
+- Description: Manages app state like board, turns, theming. Allows components to update state and react to changes.
+
+- Purpose: Centralized state management.
+
+- Relevant files: src/redux/store.ts, src/redux/slices/*.ts
+
+### Theme styling  
+
+- Description: Provides light and dark theme styles that components can use dynamically.
+
+- Purpose: Enable switching between different visual themes.
+
+- Relevant files: useStyle.ts, src/style/*.ts
+
+### Navigation
+
+- Description: Routes to navigate between screens like GameScreen and HomeScreen. Stack navigator manages flow.
+
+- Purpose: App navigation and routing.
+
+- Relevant files: src/screens/Routing.tsx
+
+### Services  
+
+- Description: Handles game data and realtime communication via Socket.io. Instead normal fetch is used for user and game creation.
+
+- Purpose: Multiplayer/SinglePlayer backend API and realtime server.
+
+- Relevant files: services/socket, services/fetch/*.ts
 
 ### Subdirectory 1: [Title]
 
@@ -141,6 +196,12 @@ JSON-INPUTS-END
 Based on the answer generated by Cody for the "Improve ## References" slot, we can identify areas for iterative improvement. Please refer to the analysis files for each iteration located in the [IterativeImprovement](./IterativeImprovement/) directory.
 
 You can find all the analysis files as `./IterativeImprovement/*`. Each file provides detailed insights for a specific iteration.
+Example files:
+
+- `./IterativeImprovement/analysis-1-1.md`
+- `./IterativeImprovement/analysis-1-2.md`
+- `./IterativeImprovement/analysis-2-1.md`
+- `./IterativeImprovement/analysis-*.md`
 
 Please refer to the respective analysis files for detailed insights on each iteration.
 

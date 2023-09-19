@@ -3,7 +3,7 @@ import { useEffect, useMemo, useState } from 'react';
 import GameListItem from './Item';
 import Header from '../../Header';
 import Footer from '../../Footer';
-import useThemedStyle from '../../../hooks/useThemedStyle';
+import useStyle from '../../../hooks/useStyle';
 import style from './style';
 import Button from '../../Button';
 import GameListFields from './Fields';
@@ -15,7 +15,7 @@ const GamesList = (props: { close: () => void; openConfigs: () => void }) => {
   // list all online games, get the games by fetching an api.
   // on every row is showed a game with infos ( players number and grid size ) and the button to join the game
 
-  const themeStyle = useThemedStyle(style);
+  const style_ = useStyle(style);
   const [state, setState] = useState<{ gameIdToJoin: number; games: Game[] }>({
     gameIdToJoin: 0,
     games: []
@@ -49,15 +49,15 @@ const GamesList = (props: { close: () => void; openConfigs: () => void }) => {
   );
 
   return (
-    <View style={themeStyle.container}>
-      <Header style={themeStyle.header}>
+    <View style={style_.container}>
+      <Header style={style_.header}>
         <Button onPress={props.close} text="X" version="secondary" />
       </Header>
-      <ScrollView style={themeStyle.list}>
+      <ScrollView style={style_.list}>
         <GameListFields fields={['Name', 'players']} />
         {gamesList}
       </ScrollView>
-      <Footer style={themeStyle.footer}>
+      <Footer style={style_.footer}>
         <Button onPress={props.openConfigs} text="Create" version="secondary" />
       </Footer>
     </View>

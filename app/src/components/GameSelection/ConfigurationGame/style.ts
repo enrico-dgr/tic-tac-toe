@@ -16,6 +16,8 @@ export default create(({ palette }) => ({
     height: '80%',
     width: 500,
     borderRadius: 10,
+    flexDirection: 'column',
+    justifyContent: 'space-between',
     padding: 20,
     shadowColor: '#000',
     shadowOffset: {
@@ -26,6 +28,9 @@ export default create(({ palette }) => ({
     shadowRadius: 4,
     elevation: 5,
     zIndex: 5
+  },
+  configs: {
+    
   },
   configTitle: {
     color: palette.primaryAccentColor,

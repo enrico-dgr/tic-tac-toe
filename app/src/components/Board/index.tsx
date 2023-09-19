@@ -1,7 +1,7 @@
 import { StyleSheet, View } from 'react-native';
 import style from './style';
 import Cell from './Cell';
-import useThemedStyle from '../../hooks/useThemedStyle';
+import useStyle from '../../hooks/useStyle';
 
 type Props = {
   height: number;
@@ -9,11 +9,11 @@ type Props = {
 };
 
 const Board = ({ height, width }: Props) => {
-  const styleByTheme = useThemedStyle(style);
+  const style_ = useStyle(style);
 
   const boardSize = height * width;
-  const boardWidthPx = width * styleByTheme.cell.width;
-  const boardStyle = StyleSheet.compose(styleByTheme.board, { width: boardWidthPx });
+  const boardWidthPx = width * style_.cell.width;
+  const boardStyle = StyleSheet.compose(style_.board, { width: boardWidthPx });
   const cells = [];
 
   for (let i = 0; i < boardSize; i++) {

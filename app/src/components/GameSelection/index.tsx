@@ -4,8 +4,8 @@ import ConfigurationGameLocal from './ConfigurationGame/Local';
 import ConfigurationGameOnline from './ConfigurationGame/Online';
 import OnlineGamesList from './OnlineGamesList';
 import style from './style';
-import useThemedStyle from '../../hooks/useThemedStyle';
 import Button from '../Button';
+import useStyle from '../../hooks/useStyle';
 
 /**
  * React Native component that displays an interface
@@ -19,7 +19,7 @@ import Button from '../Button';
  * - create a new one -> configuration window -> redirect to lobby page
  */
 const GameSelection = () => {
-  const themedStyle = useThemedStyle(style);
+  const style_ = useStyle(style);
   const [state, setState] = useState({
     configs: {
       local: false,
@@ -37,7 +37,7 @@ const GameSelection = () => {
   const gamesList = (open: boolean) => () => setState({ ...state, gamesList: open });
 
   return (
-    <View style={themedStyle.container}>
+    <View style={style_.container}>
       <Button onPress={localConfigs(true)} text='Local' />
       <Button onPress={gamesList(true)} text='Online >' />
 

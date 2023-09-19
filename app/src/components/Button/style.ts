@@ -1,25 +1,21 @@
-import { StyleSheet } from 'react-native';
-import { Theme, getThemePalette } from '../../style/colors';
+import create from '../../style/create';
 
-export type ButtonVersion = 'primary' | 'secondary';
-
-export default (version: ButtonVersion) => (theme: Theme) => {
-  const palette = getThemePalette(theme);
-
-  return StyleSheet.create({
-    gameOption: {
-      alignItems: 'center',
-      borderColor: palette[`${version}Color`],
-      borderWidth: 2,
-      color: palette[`${version}Color`],
-      borderTopLeftRadius: 35,
-      borderBottomRightRadius: 35,
-      paddingVertical: 15,
-      paddingHorizontal: 20,
-      width: 150
-    },
-    gameOptionText: {
-      color: palette[`${version}Color`]
-    }
-  });
-};
+export default create(({ palette, version }) => ({
+  pressable: {
+    alignItems: 'center',
+    borderColor: palette[`${version}Color`],
+    borderWidth: 2,
+    color: palette[`${version}Color`],
+    borderTopLeftRadius: 35,
+    borderBottomRightRadius: 35,
+    paddingVertical: 15,
+    paddingHorizontal: 20,
+    width: 150
+  },
+  pressed: {
+    backgroundColor: palette.backgroundColor
+  },
+  text: {
+    color: palette[`${version}Color`]
+  }
+}));

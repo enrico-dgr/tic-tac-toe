@@ -1,5 +1,5 @@
 import { Pressable, Text } from 'react-native';
-import useThemedStyle from '../../../hooks/useThemedStyle';
+import useStyle from '../../../hooks/useStyle';
 import style from './style';
 
 const GameListItem = ({
@@ -13,12 +13,12 @@ const GameListItem = ({
   name: string;
   onPress: () => void;
 }) => {
-  const themedStyle = useThemedStyle(style);
+  const style_ = useStyle(style);
 
   return (
-    <Pressable onPress={onPress} style={themedStyle.item}>
-      <Text style={themedStyle.itemText}>{name}</Text>
-      <Text style={themedStyle.itemText}>{players}/{size}</Text>
+    <Pressable onPress={onPress} style={style_.item}>
+      <Text style={style_.itemText}>{name}</Text>
+      <Text style={style_.itemText}>{players}/{size}</Text>
     </Pressable>
   );
 };

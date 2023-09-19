@@ -1,15 +1,37 @@
-import { Pressable, Text } from 'react-native';
-import useThemedStyle from '../../hooks/useThemedStyle';
-import style, { ButtonVersion } from './style';
+import { Pressable, StyleSheet, Text } from 'react-native';
+import style from './style';
+import useStyle from '../../hooks/useStyle';
+import { Version } from '../../style/create';
+import { useMemo, useState } from 'react';
 
-type Props = { onPress: () => void; text: string; version?: ButtonVersion };
+type Props = { onPress?: () => void; text: string; version?: Version };
 
 const Button = (props: Props) => {
-  const themedStyle = useThemedStyle(style(props.version ?? 'primary'));
+  const style_ = useStyle(style);
+
+  const [state, setState] = useState({
+    pressed: false
+  });
+
+  const onPressIn = () => setState({ ...state, pressed: true });
+
+  const onPressOut = () => setState({ ...state, pressed: false });
+
+  const pressableStyle = useMemo(
+    () => StyleSheet.compose(style_.pressable, state.pressed ? style_.pressed : {}),
+    [state.pressed]
+  );
 
   return (
-    <Pressable onPress={props.onPress} style={themedStyle.gameOption}>
-      <Text style={themedStyle.gameOptionText}>{props.text}</Text>
+    <Pressable
+      onPress={props.onPress}
+      onPressIn={onPressIn}
+      onPressOut={onPressOut}
+      style={pressableStyle}
+    >
+      <Text style={style_.text} selectable={false}>
+        {props.text}
+      </Text>
     </Pressable>
   );
 };

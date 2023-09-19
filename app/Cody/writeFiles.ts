@@ -43,6 +43,32 @@ const classifyAndSaveInput = (inp: any) => {
   }
 };
 
+
+/**
+ * @example
+ * // The code will extract text from the following format
+ * // inside "./context.md" 
+ *  `JSON-INPUTS-START
+
+    [{
+
+      "path": "path/to/file.file-extension",
+
+      "content": "
+
+      ```file-extension
+      // Code
+      ```
+
+      "
+
+    }]
+
+    JSON-INPUTS-END`
+ * // Where `JSON-INPUTS-START` and `JSON-INPUTS-END` are
+ * // the boundaries of the extracted text,
+ * // they must be present.
+ */
 const extractInputs = () => {
   const systemValidPath = toValidPath('./context.md')
 

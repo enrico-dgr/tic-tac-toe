@@ -68,7 +68,7 @@ const InputField: React.FC<Props> = ({
           />
         );
     }
-  }, [propsByType.type]);
+  }, [propsByType.type, value, label, onValueChange]);
 
   return (
     <View style={containerStyle_}>
