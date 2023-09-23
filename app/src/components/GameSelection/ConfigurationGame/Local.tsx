@@ -6,18 +6,37 @@ import useStyle from '../../../hooks/useStyle';
 import Button from '../../Button';
 import GamesServices from '../../../services/fetch/games';
 import Modal from './Modal';
+import { useDispatch } from 'react-redux';
+import { set } from '../../../redux/slices/game';
 
+/**
+ * ConfigurationGameLocal React component.
+ *
+ * Renders a modal UI to configure options for starting a new local game.
+ * Allows the user to set the board size and difficulty level.
+ *
+ * Uses React state and callbacks to update the configuration locally.
+ * Calls the GamesService API to create a new game when user confirms.
+ *
+ * Renders InputField components for size and difficulty selection.
+ * Allows size values from 3 to 5 selected from a dropdown.
+ * Difficulty can be set to 'easy', 'normal', or 'hard'.
+ *
+ * On create game, passes the state object as body for creation.
+ */
 const ConfigurationGameLocal = () => {
-  // configuration game component.
-  // player can select the number of cells, options are squared values of numbers from 3 to 6
-
   const style_ = useStyle(style);
+
+  const dispatch = useDispatch();
+
+  // State to store configuration
   const [state, setState] = useState({
     name: 'default',
     size: 3,
     difficulty: 'normal'
   });
 
+  // Callback to update board size
   const onSizeChange = useCallback((text: string) => {
     setState((s) => ({
       ...s,
@@ -25,6 +44,7 @@ const ConfigurationGameLocal = () => {
     }));
   }, []);
 
+  // Callback to update difficulty
   const onDifficultyChange = useCallback((text: string) => {
     setState((s) => ({
       ...s,
@@ -32,15 +52,19 @@ const ConfigurationGameLocal = () => {
     }));
   }, []);
 
+  // Callback to create new game
   const createGame = useCallback(
     () =>
       GamesServices.create({
         body: JSON.stringify(state)
+      }).then(res => res.json())
+      .then(game => {
+        dispatch(set(game));
       }),
     [state]
   );
 
-  // Add logic to render UI for configuring game
+  // Render UI for configuring game
   return (
     <Modal>
       <View style={style_.configs}>

@@ -1,1 +1,0 @@
-    const someCode = () => {};  const str = 'string';  const obj = {    prop: `my ${str}`  };    

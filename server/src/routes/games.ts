@@ -44,8 +44,20 @@ const difficulty = {
   }
 };
 
-gamesRouter.get('/', (req, res) => {
-  // Get all users
+gamesRouter.get('/', (req, res, next) => {
+
+  db.query('SELECT * FROM Users WHERE id = ?', [req.userId], (err, results) => {
+    if (err) return next(err);
+    
+    if (!results.length) {
+      return res.status(401).send('Unauthorized'); 
+    }
+
+    // User id exists, proceed to get match
+    // Get running game by user's id
+
+  });
+
 });
 
 /**

@@ -44,8 +44,11 @@ const GameSelection = () => {
       {/* <Link text="Multiplayer" to="/game/multiplayer/lobby" /> */}
 
       {/* {state.configs.local && <ConfigurationGameLocal />} */}
+      {/* For development purpose */}
       <ConfigurationGameLocal />
+
       {state.configs.online && <ConfigurationGameOnline />}
+      
       {state.gamesList && (
         <OnlineGamesList openConfigs={onlineConfigs(true)} close={gamesList(false)} />
       )}
