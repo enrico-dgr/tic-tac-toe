@@ -4,11 +4,12 @@ import { Server, Socket } from 'socket.io';
 import bodyParser from 'body-parser';
 import usersRouter from './routes/users';
 import gamesRouter from './routes/games';
-
+import swagger from './swagger';
+import swaggerUi from 'swagger-ui-express';
 
 export const app = express();
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.urlencoded({ extended: true }));
 
 const httpServer = createServer(app);
 
@@ -43,8 +44,16 @@ app.get('/', (req, res) => {
 app.use('/users', usersRouter);
 app.use('/games', gamesRouter);
 
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(swagger));
+app.get('/docs.json', (_, res) => {
+  res.setHeader('Content-Type', 'application/json');
+  res.send(swagger);
+});
+
 // Listen
 
-httpServer.listen(3000, () => {
-  console.log('Server running on port 3000');
+const port = 3000;
+httpServer.listen(port, () => {
+  console.log(`Server running on port ${port}`);
+  console.log(`API documentation: http://localhost:${port}/docs`);
 });

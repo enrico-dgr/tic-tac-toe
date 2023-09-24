@@ -1,7 +1,9 @@
-import { useEffect, useMemo } from 'react';
+import { useEffect } from 'react';
 import { useAppSelector } from '../redux';
 import { useDispatch } from 'react-redux';
 import { logout, set } from '../redux/slices/user';
+import { getCookie, setCookie } from '../utils/cookies';
+import UsersHTTPService from '../services/http/users';
 
 /**
  * Custom hook to get the current user name.
@@ -10,49 +12,30 @@ const useUser = () => {
   const dispatch = useDispatch();
 
   // Get the user name from the Redux store
-  const name = useAppSelector(state => state.user.name);
+  const name = useAppSelector((state) => state.user.name);
 
   useEffect(() => {
     // If no user name, try to get it from local storage
     if (name === '') {
-      const storageUser = window.localStorage.getItem('user');
-
-      /**
-       * @todo Add dynamic type validation
-       */
-      const user = storageUser ? JSON.parse(storageUser) : undefined;
+      const username = getCookie('user');
 
       // If available, dispatch the user name
-      if (user) {
-        fetch('http://localhost:3000/users/guest', {
-          method: 'GET'
+      if (username) {
+        UsersHTTPService.getByUsername({
+          username
         })
-          .then(res => res.json())
-          .then(user => {
-            dispatch(set(user));
+          .then((resUser) => {
+            dispatch(set(resUser));
           })
           .catch(() => {
-            dispatch(logout(user));
-          })
-      } else {
-        
-        // Otherwise fetch a guest user from the API
-        fetch('http://localhost:3000/users/guest', {
-          method: 'GET'
-        })
-          .then(res => res.json())
-          /**
-           * @todo add dynamic type validation
-           */
-          .then(user => {
-            dispatch(set(user));
-            window.localStorage.setItem('user', JSON.stringify(user.name));  
-          })
-          .catch(() => {
-            /**
-             * @todo Handle error
-             */
+            dispatch(logout());
           });
+      } else {
+        // Otherwise fetch a new guest user from the API
+        UsersHTTPService.getNewGuest().then((resUser) => {
+          dispatch(set(resUser));
+          setCookie({ name: 'user', value: resUser.name });
+        });
       }
     }
   }, [name]);

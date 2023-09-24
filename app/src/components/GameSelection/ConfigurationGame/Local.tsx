@@ -4,7 +4,7 @@ import style from './style';
 import InputField from '../../InputField';
 import useStyle from '../../../hooks/useStyle';
 import Button from '../../Button';
-import GamesServices from '../../../services/fetch/games';
+import GamesHTTPService from '../../../services/http/games';
 import Modal from './Modal';
 import { useDispatch } from 'react-redux';
 import { set } from '../../../redux/slices/game';
@@ -55,7 +55,7 @@ const ConfigurationGameLocal = () => {
   // Callback to create new game
   const createGame = useCallback(
     () =>
-      GamesServices.create({
+      GamesHTTPService.create({
         body: JSON.stringify(state)
       }).then(res => res.json())
       .then(game => {

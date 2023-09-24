@@ -1,7 +1,7 @@
 import db from '../db';
 import { Request, Router } from 'express';
 import cors from 'cors';
-import { ResultSetHeader } from 'mysql2';
+import { ResultSetHeader, RowDataPacket } from 'mysql2';
 
 const gamesRouter = Router();
 
@@ -44,20 +44,25 @@ const difficulty = {
   }
 };
 
-gamesRouter.get('/', (req, res, next) => {
+gamesRouter.get('/:id', (req: Request<{ id: string }>, res) => {
+  db.query(
+    'SELECT * FROM Games WHERE id = ?',
+    [req.params.id],
+    (err, rowPackets: RowDataPacket[]) => {
+      if (err) {
+        res.sendStatus(400);
+        return;
+      }
 
-  db.query('SELECT * FROM Users WHERE id = ?', [req.userId], (err, results) => {
-    if (err) return next(err);
-    
-    if (!results.length) {
-      return res.status(401).send('Unauthorized'); 
+      if (rowPackets.length < 1) {
+        res.sendStatus(404);
+        return;
+      }
+
+      // User id exists, proceed to get match
+      // Get running game by user's id
     }
-
-    // User id exists, proceed to get match
-    // Get running game by user's id
-
-  });
-
+  );
 });
 
 /**
@@ -106,12 +111,6 @@ gamesRouter.post('/', (req: Request<{}, {}, Omit<Game, 'id'>, {}>, res) => {
       res.json(game);
     }
   );
-});
-
-gamesRouter.get('/guest', (req, res) => {
-  // Get guest
-  const rows = db.query('SELECT * FROM games');
-  res.json(rows);
 });
 
 export default gamesRouter;

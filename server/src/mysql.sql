@@ -1,3 +1,4 @@
+-- SHOW DATABASES;
 -- SHOW TABLES;
 
 create table Games (
@@ -34,3 +35,5 @@ alter table Games ADD CHECK (difficulty>=0 AND difficulty<=5);
 SELECT  *
 FROM    Moves
 WHERE   (num, gameId) = (1, 10)
+
+UPDATE users SET name=CONCAT('guest', id);

@@ -7,8 +7,8 @@ const create = ({ body }: { body: RequestInit['body'] }) =>
     body
   });
 
-const GamesServices = {
+const GamesHTTPService = {
   create
 };
 
-export default GamesServices;
+export default GamesHTTPService;
