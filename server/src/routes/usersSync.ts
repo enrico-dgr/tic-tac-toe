@@ -50,7 +50,7 @@ usersRouter.get('/newGuest', async (req: Request<{}, {}, {}, {}>, res) => {
       db.query(
         'UPDATE users SET name=? WHERE id=?',
         ['guest' + resultSet.insertId, resultSet.insertId],
-        (err, resultSet: ResultSetHeader) => {
+        (err) => {
           if (err) {
             res.sendStatus(400);
             return;

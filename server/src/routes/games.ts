@@ -1,7 +1,6 @@
 import db from '../db';
-import { Request, Router } from 'express';
+import { Request, Response, Router } from 'express';
 import cors from 'cors';
-import { ResultSetHeader, RowDataPacket } from 'mysql2';
 
 const gamesRouter = Router();
 
@@ -11,7 +10,16 @@ gamesRouter.use(
   })
 );
 
-type GameDB = { id: number; name?: string; size: number; difficulty: number };
+type GameDB = {
+  id: number;
+  name?: string;
+  size: number;
+  difficulty: number;
+  moves: 0;
+  created_at: Date;
+  lastModified: Date;
+};
+
 type Game = { id: number; name?: string; size: number; difficulty: keyof typeof Diff };
 
 enum Diff {
@@ -44,26 +52,37 @@ const difficulty = {
   }
 };
 
-gamesRouter.get('/:id', (req: Request<{ id: string }>, res) => {
-  db.query(
-    'SELECT * FROM Games WHERE id = ?',
-    [req.params.id],
-    (err, rowPackets: RowDataPacket[]) => {
-      if (err) {
-        res.sendStatus(400);
-        return;
-      }
-
-      if (rowPackets.length < 1) {
-        res.sendStatus(404);
-        return;
-      }
-
-      // User id exists, proceed to get match
-      // Get running game by user's id
+const getGameById = async (req: Request<{ id: string }>, res: Response) => {
+  const r = await db.select<GameDB>({
+    from: 'Games',
+    where: {
+      id: req.params.id
     }
-  );
-});
+  });
+
+  if (r.type === 'success') {
+    if (r.results.length < 1) {
+      res.statusMessage = 'Game not found';
+      res.sendStatus(404);
+      return;
+    }
+
+    const gameDb = r.results[0];
+
+    const game: Game = {
+      id: gameDb.id,
+      difficulty: difficulty.toStr(gameDb.difficulty),
+      size: gameDb.size,
+      name: gameDb.name
+    };
+
+    // User id exists, proceed to get match
+    // Get running game by user's id
+    res.send(game);
+  } else {
+    res.sendStatus(400);
+  }
+};
 
 /**
  * @todo Add dynamic type validation on code and
@@ -71,7 +90,7 @@ gamesRouter.get('/:id', (req: Request<{ id: string }>, res) => {
  * so to Regex them with code and give
  * meaningful error message inside the response.
  */
-gamesRouter.post('/', (req: Request<{}, {}, Omit<Game, 'id'>, {}>, res) => {
+gamesRouter.post('/', async (req: Request<{}, {}, Omit<Game, 'id'>, {}>, res) => {
   if (req.headers['content-type'] !== 'application/json') {
     res.statusMessage = 'Content-Type must be application/json.';
     res.sendStatus(400);
@@ -81,36 +100,60 @@ gamesRouter.post('/', (req: Request<{}, {}, Omit<Game, 'id'>, {}>, res) => {
   // Create a new game
   let game: Game;
 
-  const values = [req.body.name, req.body.size, difficulty.toNumber(req.body.difficulty)];
-
-  db.query(
-    'INSERT INTO Games (name, size, difficulty) VALUES (?, ?, ?)',
-    values,
-    (err, resultSet: ResultSetHeader) => {
-      if (err) {
-        if (err.code === 'ER_CHECK_CONSTRAINT_VIOLATED') {
-          res.statusMessage = `Values are not valid.`;
-        } else {
-          console.log('Unhandled mysql error code', {
-            ...err // Spread avoids logging of error's `stack`.
-          });
-        }
-
-        res.sendStatus(400);
-
-        return;
-      }
-
-      // Return the game with ID
-      game = {
-        ...req.body,
-        id: resultSet.insertId
-      };
-
-      res.statusCode = 200;
-      res.json(game);
+  /**
+   * @todo check `insert` and `select` results' types
+   */
+  /**
+   * @todo define Game object construction ( with players and other frontend-useful data )
+   */
+  const r = await db.insert({
+    into: 'Games',
+    properties: {
+      name: req.body.name,
+      size: req.body.size,
+      difficulty: difficulty.toNumber(req.body.difficulty)
     }
-  );
+  });
+
+  // ResultSetHeader
+  if (r.type === 'success') {
+    // Return the game with ID
+    game = {
+      ...req.body,
+      // id: r.res.insertId
+      id: 2
+    };
+
+    res.statusCode = 200;
+    res.json(game);
+  } else {
+    res.statusMessage = r.message;
+    res.sendStatus(400);
+  }
 });
+
+/**
+ * @openapi
+ * /games/{id}:
+ *   get:
+ *     description: Returns game by game's id.
+ *     parameters:
+ *     - name: id
+ *       description: Id of the game.
+ *       in: path
+ *       required: true
+ *     responses:
+ *       200:
+ *         description: Json data of game.
+ *         content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *       404:
+ *         description: Game not found.
+ *       500:
+ *         description: Server error
+ */
+gamesRouter.get('/:id', getGameById);
 
 export default gamesRouter;
