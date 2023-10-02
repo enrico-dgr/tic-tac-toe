@@ -1,6 +1,12 @@
 import db from '../db';
 import { Request, Response, Router } from 'express';
 import cors from 'cors';
+import { applicationJson } from '../middlewares/headers/contentType';
+import * as auth from '../middlewares/auth';
+
+/**
+ * @todo Missing `moves` in `Game`
+ */
 
 const gamesRouter = Router();
 
@@ -12,7 +18,7 @@ gamesRouter.use(
 
 type GameDB = {
   id: number;
-  name?: string;
+  name: string;
   size: number;
   difficulty: number;
   moves: 0;
@@ -20,7 +26,13 @@ type GameDB = {
   lastModified: Date;
 };
 
-type Game = { id: number; name?: string; size: number; difficulty: keyof typeof Diff };
+type Game = {
+  id: number;
+  name: string;
+  size: number;
+  difficulty: keyof typeof Diff;
+  players: { userId: number }[];
+};
 
 enum Diff {
   easy = 0,
@@ -53,31 +65,53 @@ const difficulty = {
 };
 
 const getGameById = async (req: Request<{ id: string }>, res: Response) => {
-  const r = await db.select<GameDB>({
+  let game: Game | undefined = undefined;
+
+  const gameResult = await db.select<GameDB>({
     from: 'Games',
     where: {
       id: req.params.id
     }
   });
 
-  if (r.type === 'success') {
-    if (r.results.length < 1) {
+  let gameDb: GameDB | undefined = undefined;
+
+  if (gameResult.type === 'success') {
+    if (gameResult.results.length < 1) {
       res.statusMessage = 'Game not found';
       res.sendStatus(404);
       return;
     }
 
-    const gameDb = r.results[0];
+    gameDb = gameResult.results[0];
+  }
 
-    const game: Game = {
+  let players: { userId: number }[] | undefined = undefined;
+
+  if (gameDb) {
+    const playersRes = await db.select<{ userId: number; gameId: number }>({
+      from: 'Players',
+      where: {
+        gameId: gameDb.id
+      }
+    });
+
+    if (playersRes.type === 'success') {
+      players = playersRes.results.map((p) => ({ userId: p.userId }));
+    }
+  }
+
+  if (gameDb && players) {
+    game = {
       id: gameDb.id,
       difficulty: difficulty.toStr(gameDb.difficulty),
       size: gameDb.size,
-      name: gameDb.name
+      name: gameDb.name,
+      players
     };
+  }
 
-    // User id exists, proceed to get match
-    // Get running game by user's id
+  if (game) {
     res.send(game);
   } else {
     res.sendStatus(400);
@@ -89,23 +123,15 @@ const getGameById = async (req: Request<{ id: string }>, res: Response) => {
  * give unique names to check-constraints in MySql
  * so to Regex them with code and give
  * meaningful error message inside the response.
+ *
+ * @todo Add middleware for auth
  */
-gamesRouter.post('/', async (req: Request<{}, {}, Omit<Game, 'id'>, {}>, res) => {
-  if (req.headers['content-type'] !== 'application/json') {
-    res.statusMessage = 'Content-Type must be application/json.';
-    res.sendStatus(400);
-    return;
-  }
+const createGame = async (
+  req: Request<{}, {}, Omit<Game, 'id' | 'players'> & auth.JwtBodyExt, {}>,
+  res: Response
+) => {
+  let gameNoPlayers: Omit<Game, 'players'> | undefined = undefined;
 
-  // Create a new game
-  let game: Game;
-
-  /**
-   * @todo check `insert` and `select` results' types
-   */
-  /**
-   * @todo define Game object construction ( with players and other frontend-useful data )
-   */
   const r = await db.insert({
     into: 'Games',
     properties: {
@@ -115,22 +141,40 @@ gamesRouter.post('/', async (req: Request<{}, {}, Omit<Game, 'id'>, {}>, res) =>
     }
   });
 
-  // ResultSetHeader
   if (r.type === 'success') {
-    // Return the game with ID
-    game = {
+    gameNoPlayers = {
       ...req.body,
-      // id: r.res.insertId
-      id: 2
+      id: r.result.insertId
     };
-
-    res.statusCode = 200;
-    res.json(game);
   } else {
     res.statusMessage = r.message;
     res.sendStatus(400);
   }
-});
+
+  let game: Game | undefined = undefined;
+
+  if (gameNoPlayers) {
+    const playerRes = await db.insert({
+      into: 'Players',
+      properties: {
+        gameId: gameNoPlayers.id,
+        userId: req.body.auth.userId
+      }
+    });
+
+    if (playerRes.type === 'success') {
+      game = {
+        ...gameNoPlayers,
+        players: [{ userId: req.body.auth.userId }]
+      };
+    }
+  }
+
+  if (game) {
+    res.statusCode = 200;
+    res.json(game);
+  }
+};
 
 /**
  * @openapi
@@ -155,5 +199,26 @@ gamesRouter.post('/', async (req: Request<{}, {}, Omit<Game, 'id'>, {}>, res) =>
  *         description: Server error
  */
 gamesRouter.get('/:id', getGameById);
+
+/**
+ * @openapi
+ * /games:
+ *   post:
+ *     description: Create game and returns it.
+ *     responses:
+ *       200:
+ *         description: Json data of game.
+ *         content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *       400:
+ *         description: Unknown error.
+ *       404:
+ *         description: Wrong header.
+ *       500:
+ *         description: Server error
+ */
+gamesRouter.post('/', applicationJson, auth.jwt, createGame);
 
 export default gamesRouter;

@@ -1,4 +1,4 @@
-import { Connection } from 'mysql2/promise';
+import { Connection, ResultSetHeader } from 'mysql2/promise';
 import parseError from './parseError';
 import parseSuccess from './parseSuccess';
 
@@ -20,8 +20,11 @@ const insert =
 
     return cn
       .query(sql, values)
-      .then(([res, fieldPackets]) => {
-        return { res, fieldPackets };
+      .then(([result, fieldPackets]) => {
+        return {
+          result: result as ResultSetHeader,
+          fieldPackets
+        };
       })
       .then(parseSuccess)
       .catch(parseError);

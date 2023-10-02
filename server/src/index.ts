@@ -4,6 +4,7 @@ import { Server, Socket } from 'socket.io';
 import bodyParser from 'body-parser';
 // import usersRouter from './routes/users';
 import gamesRouter from './routes/games';
+import playersRouter from './routes/players';
 import swagger from './swagger';
 import swaggerUi from 'swagger-ui-express';
 
@@ -43,6 +44,7 @@ app.get('/', (req, res) => {
 
 // app.use('/users', usersRouter);
 app.use('/games', gamesRouter);
+app.use('/players', playersRouter);
 
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(swagger));
 app.get('/docs.json', (_, res) => {

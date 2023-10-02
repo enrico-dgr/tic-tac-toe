@@ -4,6 +4,7 @@ import { useDispatch } from 'react-redux';
 import { logout, set } from '../redux/slices/user';
 import { getCookie, setCookie } from '../utils/cookies';
 import UsersHTTPService from '../services/http/users';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 /**
  * Custom hook to get the current user name.
