@@ -2,7 +2,7 @@ import express from 'express';
 import { createServer } from 'http';
 import { Server, Socket } from 'socket.io';
 import bodyParser from 'body-parser';
-// import usersRouter from './routes/users';
+import usersRouter from './routes/users';
 import gamesRouter from './routes/games';
 import playersRouter from './routes/players';
 import swagger from './swagger';
@@ -42,7 +42,7 @@ app.get('/', (req, res) => {
   // Handle API requests here
 });
 
-// app.use('/users', usersRouter);
+app.use('/users', usersRouter);
 app.use('/games', gamesRouter);
 app.use('/players', playersRouter);
 

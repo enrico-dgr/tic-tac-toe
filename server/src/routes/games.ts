@@ -4,10 +4,6 @@ import cors from 'cors';
 import { applicationJson } from '../middlewares/headers/contentType';
 import * as auth from '../middlewares/auth';
 
-/**
- * @todo Missing `moves` in `Game`
- */
-
 const gamesRouter = Router();
 
 gamesRouter.use(
@@ -119,12 +115,10 @@ const getGameById = async (req: Request<{ id: string }>, res: Response) => {
 };
 
 /**
- * @todo Add dynamic type validation on code and
- * give unique names to check-constraints in MySql
- * so to Regex them with code and give
- * meaningful error message inside the response.
+ * @todo Add dynamic type validation pattern
  *
- * @todo Add middleware for auth
+ * e.g. function accepting a io-ts instance and
+ * a request-handler ( with a typed body ? )
  */
 const createGame = async (
   req: Request<{}, {}, Omit<Game, 'id' | 'players'> & auth.JwtBodyExt, {}>,

@@ -14,6 +14,10 @@ export default (
     console.log('Unhandled mysql error code', {
       ...err // Spread avoids logging of error's `stack`.
     });
+
+    if (typeof err.code === 'string') {
+      statusMessage = err.code;
+    }
   }
 
   return {

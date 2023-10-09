@@ -1,6 +1,7 @@
 import mysql from 'mysql2/promise';
 import insert from './insert';
 import select from './select';
+import update from './update';
 
 const db = mysql.createConnection({
   host: 'localhost',
@@ -18,6 +19,7 @@ db.then((s) => {
 });
 
 export default {
+  update: update(db),
   insert: insert(db),
   select: select(db)
 };
