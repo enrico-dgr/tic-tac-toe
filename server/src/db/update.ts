@@ -1,4 +1,4 @@
-import { Connection } from 'mysql2/promise';
+import { Connection, ResultSetHeader } from 'mysql2/promise';
 import parseError from './parseError';
 import parseSuccess from './parseSuccess';
 
@@ -10,7 +10,7 @@ type Deps = {
 
 const update =
   (db: Promise<Connection>) =>
-  async <T extends Object>({ update, set, where }: Deps) => {
+  async ({ update, set, where }: Deps) => {
     // `id = ?, name = ?`
     const keysSet = Object.keys(set)
       .map((k) => k + '= ?')
@@ -29,10 +29,9 @@ const update =
 
     return cn
       .query(sql, [...valuesSet, ...valuesWhere])
-      .then(([results, fieldPackets]) => {
-        console.log(results);
+      .then(([result, fieldPackets]) => {
         return {
-          results: results as T[],
+          result: result as ResultSetHeader,
           fieldPackets
         };
       })

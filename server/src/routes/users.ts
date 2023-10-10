@@ -1,11 +1,6 @@
-import { ResultSetHeader, RowDataPacket } from 'mysql2';
 import cors from 'cors';
 import db from '../db';
 import { Router, Request, Response } from 'express';
-
-/**
- * @todo test with Postman
- */
 
 const usersRouter = Router();
 
@@ -46,14 +41,13 @@ const newGuest = async (req: Request<{}, {}, {}, {}>, res: Response) => {
 
   if (r.type === 'success') {
     userBeforeNameUpdate = { name: `guest${r.result.insertId}` };
+    id = r.result.insertId;
   } else {
     res.statusMessage = r.message;
   }
 
-
-
   if (userBeforeNameUpdate) {
-    const updateRes = await db.update<User>({
+    const updateRes = await db.update({
       update: 'Users',
       set: {
         name: userBeforeNameUpdate.name
@@ -64,7 +58,9 @@ const newGuest = async (req: Request<{}, {}, {}, {}>, res: Response) => {
     })
 
     if (updateRes.type === 'success') {
-      user = updateRes.results[0]
+      user = {
+        ...userBeforeNameUpdate
+      }
     } else {
       res.statusMessage = updateRes.message;
     }
